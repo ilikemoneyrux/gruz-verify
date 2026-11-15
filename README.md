@@ -10,18 +10,19 @@ The bot has no database. The panel's settings are stored in its button, so a res
 
 ## Setup (once)
 
-1. **Discord Developer Portal** → New Application "Gruz Verify" → Bot:
-   - Reset Token and copy it (do not send it to anyone).
-   - Turn on **Server Members Intent**. Without it the bot cannot count members.
-2. Invite the bot: OAuth2 → URL Generator → scopes `bot` + `applications.commands`, permissions `Manage Roles`, `Send Messages`, `Attach Files`, `Embed Links`, `View Channels`. Then in Server Settings → Roles, drag the bot's role **above** `Member`.
-3. **Koyeb** → Create Web Service → GitHub → repo `gruz-verify`:
-   - Builder: Buildpack.
-   - Run command: `npm start`.
-   - Instance: Free.
-   - Port: 8000 (HTTP, health check on `/`).
-   - Environment variable: `DISCORD_TOKEN` = the token from step 1, as a Secret.
-4. On Discord, run `/verify-panel role:@Member channel:#verify language:English` and delete the old panel from the main bot.
+1. **Discord Developer Portal**: New Application "Gruz Verify", then open Bot.
+   - Reset Token and copy the token.
+   - Turn on **Server Members Intent**.
+2. **Invite the bot**: OAuth2, then URL Generator.
+   - Scopes: `bot` and `applications.commands`.
+   - Permissions: `Manage Roles`, `Send Messages`, `Attach Files`, `Embed Links`, `View Channels`.
+   - Then drag the bot's role above `Member`.
+3. **Google Cloud**: Compute Engine, then VM instances, then Create instance.
+   - Machine type: **e2-micro**.
+   - Region: **us-central1**, **us-west1** or **us-east1**. Only these are free.
+   - Boot disk: Debian 12, **Standard persistent disk**, 30 GB at most.
+4. In the VM list, click **SSH**. Paste this into the terminal and paste the token when asked:
+   `curl -fsSL https://raw.githubusercontent.com/ilikemoneyrux/gruz-verify/main/setup.sh | bash`
+5. On Discord, run `/verify-panel role:@Member` and delete the old panel from the main bot.
 
-## Test
-
-`node t.js` is not in the repo. The code was tested in a scratch folder: customId packing, the captcha image and member counting.
+Update: run the same command again. Logs: `sudo journalctl -u gruz-verify -f`.

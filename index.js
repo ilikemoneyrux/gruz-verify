@@ -1,8 +1,7 @@
-// Gruz Verify – osobny bot tylko do weryfikacji (captcha), żeby działała 24/7 niezależnie od głównego bota na Renderze.
+// Gruz Verify – osobny bot tylko do weryfikacji (captcha), żeby działała 24/7 niezależnie od głównego bota na Renderze (stoi na Google Cloud e2-micro, setup.sh).
 // Bez bazy danych: rola, minimalny wiek konta, kanał logów i język są zapisane w customId przycisku panelu
 // (/verify-panel wysyła panel; Discord nie pozwala użytkownikom zmieniać customId wiadomości bota).
-// Zmienne: DISCORD_TOKEN (wymagany), PORT (Koyeb sprawdza, czy serwis odpowiada), KOYEB_PUBLIC_DOMAIN (podaje Koyeb).
-const http = require('http');
+// Zmienne: DISCORD_TOKEN (wymagany).
 const path = require('path');
 const {
   Client, GatewayIntentBits, PermissionFlagsBits: P, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
@@ -189,13 +188,6 @@ client.on('error', (e) => console.error('[verify] klient:', e.message));
 module.exports = { pack, unpack, verifiedCount, client }; // do testu
 
 if (require.main === module) {
-  // Koyeb sprawdza port; ping przez publiczny adres co 10 min na wypadek usypiania darmowej instancji
-  const port = Number(process.env.PORT) || 8000;
-  http.createServer((q, r) => { r.writeHead(200, { 'Content-Type': 'application/json' }); r.end(JSON.stringify({ ok: true, ready: client.isReady() })); }).listen(port);
-  if (process.env.KOYEB_PUBLIC_DOMAIN) {
-    setInterval(() => fetch(`https://${process.env.KOYEB_PUBLIC_DOMAIN}/`, { signal: AbortSignal.timeout(20_000) }).catch((e) => console.warn('[keepalive]', e.message)), 10 * 60_000);
-  }
-
   if (!process.env.DISCORD_TOKEN) { console.error('[verify] brak DISCORD_TOKEN'); process.exit(1); }
   client.login(process.env.DISCORD_TOKEN);
 }
