@@ -1,0 +1,17 @@
+{
+  "name": "gruz-verify",
+  "version": "1.0.0",
+  "description": "Gruz Client: bot weryfikacji (captcha) działający 24/7",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@napi-rs/canvas": "0.1.65",
+    "discord.js": "^14.27.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
